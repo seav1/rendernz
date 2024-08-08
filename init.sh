@@ -25,7 +25,7 @@ if [ ! -s /etc/supervisor/conf.d/damon.conf ]; then
   [ -n "$GH_REPO" ] && grep -q '/' <<< "$GH_REPO" && GH_REPO=$(awk -F '/' '{print $NF}' <<< "$GH_REPO")  # 填了项目全路径的处理
 
   # 检测是否需要启用 Github CDN，如能直接连通，则不使用
-  [ -n "$GH_PROXY" ] && wget --server-response --quiet --output-document=/dev/null --no-check-certificate --tries=2 --timeout=3 https://raw.githubusercontent.com/seav1/oldnz/main/README.md >/dev/null 2>&1 && unset GH_PROXY
+  [ -n "$GH_PROXY" ] && wget --server-response --quiet --output-document=/dev/null --no-check-certificate --tries=2 --timeout=3 https://raw.githubusercontent.com/seav1/rendernz/main/README.md >/dev/null 2>&1 && unset GH_PROXY
 
   # 设置 DNS
   echo -e "nameserver 127.0.0.11\nnameserver 8.8.4.4\nnameserver 223.5.5.5\nnameserver 2001:4860:4860::8844\nnameserver 2400:3200::1\n" > /etc/resolv.conf
@@ -50,7 +50,7 @@ if [ ! -s /etc/supervisor/conf.d/damon.conf ]; then
 
   # 用户选择使用 gRPC 反代方式: Nginx / Caddy / grpcwebproxy，默认为 Caddy；如需使用 grpcwebproxy，把 REVERSE_PROXY_MODE 的值设为 nginx 或 grpcwebproxy
   if [ "$REVERSE_PROXY_MODE" = 'grpcwebproxy' ]; then
-    wget -c ${GH_PROXY}https://github.com/seav1/oldnz/releases/download/grpcwebproxy/grpcwebproxy-linux-$ARCH.tar.gz -qO- | tar xz -C $WORK_DIR
+    wget -c ${GH_PROXY}https://github.com/seav1/rendernz/releases/download/grpcwebproxy/grpcwebproxy-linux-$ARCH.tar.gz -qO- | tar xz -C $WORK_DIR
     chmod +x $WORK_DIR/grpcwebproxy
     GRPC_PROXY_RUN="$WORK_DIR/grpcwebproxy --server_tls_cert_file=$WORK_DIR/nezha.pem --server_tls_key_file=$WORK_DIR/nezha.key --server_http_tls_port=$GRPC_PROXY_PORT --backend_addr=localhost:$GRPC_PORT --backend_tls_noverify --server_http_max_read_timeout=300s --server_http_max_write_timeout=300s"
   elif [ "$REVERSE_PROXY_MODE" = 'nginx' ]; then
@@ -139,7 +139,7 @@ site:
 EOF
 
   # 下载包含本地数据的 sqlite.db 文件，生成18位随机字符串用于本地 Token
-  wget -P ${WORK_DIR}/data/ ${GH_PROXY}https://github.com/seav1/oldnz/raw/main/sqlite.db
+  wget -P ${WORK_DIR}/data/ ${GH_PROXY}https://github.com/seav1/rendernz/raw/main/sqlite.db
   LOCAL_TOKEN=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 18)
   sqlite3 ${WORK_DIR}/data/sqlite.db "update servers set secret='${LOCAL_TOKEN}' where created_at='2023-04-23 13:02:00.770756566+08:00'"
 
@@ -205,7 +205,7 @@ IS_DOCKER=1
 EOF
 
   # 生成 backup.sh 文件的步骤2 - 在线获取 template/bakcup.sh 模板生成完整 backup.sh 文件
-  wget -qO- ${GH_PROXY}https://raw.githubusercontent.com/seav1/oldnz/main/template/backup.sh | sed '1,/^########/d' >> $WORK_DIR/backup.sh
+  wget -qO- ${GH_PROXY}https://raw.githubusercontent.com/seav1/rendernz/main/template/backup.sh | sed '1,/^########/d' >> $WORK_DIR/backup.sh
 
   if [[ -n "$GH_BACKUP_USER" && -n "$GH_EMAIL" && -n "$GH_REPO" && -n "$GH_PAT" ]]; then
     # 生成 restore.sh 文件的步骤1 - 设置环境变量
@@ -227,7 +227,7 @@ IS_DOCKER=1
 EOF
 
     # 生成 restore.sh 文件的步骤2 - 在线获取 template/restore.sh 模板生成完整 restore.sh 文件
-    wget -qO- ${GH_PROXY}https://raw.githubusercontent.com/seav1/oldnz/main/template/restore.sh | sed '1,/^########/d' >> $WORK_DIR/restore.sh
+    wget -qO- ${GH_PROXY}https://raw.githubusercontent.com/seav1/rendernz/main/template/restore.sh | sed '1,/^########/d' >> $WORK_DIR/restore.sh
   fi
 
   # 生成 renew.sh 文件的步骤1 - 设置环境变量
@@ -242,7 +242,7 @@ TEMP_DIR=/tmp/renew
 EOF
 
   # 生成 renew.sh 文件的步骤2 - 在线获取 template/renew.sh 模板生成完整 renew.sh 文件
-  wget -qO- ${GH_PROXY}https://raw.githubusercontent.com/seav1/oldnz/main/template/renew.sh | sed '1,/^########/d' >> $WORK_DIR/renew.sh
+  wget -qO- ${GH_PROXY}https://raw.githubusercontent.com/seav1/rendernz/main/template/renew.sh | sed '1,/^########/d' >> $WORK_DIR/renew.sh
 
   # 生成定时任务: 1.每天北京时间 3:30:00 更新备份和还原文件，2.每天北京时间 4:00:00 备份一次，并重启 cron 服务； 3.每分钟自动检测在线备份文件里的内容
   [ -z "$NO_AUTO_RENEW" ] && [ -s $WORK_DIR/renew.sh ] && ! grep -q "$WORK_DIR/renew.sh" /etc/crontab && echo "30 3 * * * root bash $WORK_DIR/renew.sh" >> /etc/crontab
