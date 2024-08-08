@@ -12,7 +12,7 @@ RUN apt-get update &&\
     apt-get clean &&\
     rm -rf /var/lib/apt/lists/* &&\
     echo "#!/usr/bin/env bash\n\n\
-bash <(wget -qO- https://raw.githubusercontent.com/seav1/oldnz/main/init.sh)" > entrypoint.sh &&\
+bash <(wget -qO- https://raw.githubusercontent.com/seav1/rendernz/main/init.sh)" > entrypoint.sh &&\
     chmod +x entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]
