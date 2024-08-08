@@ -256,6 +256,7 @@ EOF
 nodaemon=true
 logfile=/dev/null
 pidfile=/run/supervisord.pid
+user=root
 
 [program:grpcproxy]
 command=$GRPC_PROXY_RUN
