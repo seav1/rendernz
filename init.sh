@@ -87,7 +87,7 @@ http {
 }
 EOF
   else
-    wget -O caddy https://github.com/seav1/rendernz/releases/download/caddy/caddy && mv caddy $WORK_DIR
+    wget -qO $WORK_DIR/caddy ${GH_PROXY}https://github.com/seav1/rendernz/releases/download/caddy/caddy
     GRPC_PROXY_RUN="$WORK_DIR/caddy run --config $WORK_DIR/Caddyfile --watch"
     cat > $WORK_DIR/Caddyfile  << EOF
 {
