@@ -108,7 +108,7 @@ EOF
   fi
 
   # 下载需要的应用
-  wget -O /tmp/dashboard.zip ${GH_PROXY}https://github.com/naiba/nezha/releases/download/v0.16.10/dashboard-linux-$ARCH.zip
+  wget -O /tmp/dashboard.zip ${GH_PROXY}https://github.com/naiba/nezha/releases/download/v0.16.11/dashboard-linux-$ARCH.zip
   unzip /tmp/dashboard.zip -d /tmp
   mv -f /tmp/dist/dashboard-linux-$ARCH $WORK_DIR/app
   wget -qO $WORK_DIR/cloudflared ${GH_PROXY}https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-$ARCH
