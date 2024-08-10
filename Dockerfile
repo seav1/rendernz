@@ -4,6 +4,7 @@ WORKDIR /dashboard
 
 # 安装必要的软件包和依赖项
 RUN apk add --no-cache \
+    bash \
     openssh-server \
     wget \
     iproute2 \
@@ -14,7 +15,6 @@ RUN apk add --no-cache \
     supervisor \
     nginx \
     sqlite \
-    bash \
     && git config --global core.bigFileThreshold 1k \
     && git config --global core.compression 0 \
     && git config --global advice.detachedHead false \
