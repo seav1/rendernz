@@ -1,18 +1,28 @@
-FROM ubuntu
+FROM alpine
 
 WORKDIR /dashboard
 
-RUN apt-get update &&\
-    apt-get -y install openssh-server wget iproute2 vim git cron unzip supervisor nginx sqlite3 &&\
-    git config --global core.bigFileThreshold 1k &&\
-    git config --global core.compression 0 &&\
-    git config --global advice.detachedHead false &&\
-    git config --global pack.threads 1 &&\
-    git config --global pack.windowMemory 50m &&\
-    apt-get clean &&\
-    rm -rf /var/lib/apt/lists/* &&\
-    echo "#!/usr/bin/env bash\n\n\
-bash <(wget -qO- https://raw.githubusercontent.com/seav1/rendernz/main/init.sh)" > entrypoint.sh &&\
-    chmod +x entrypoint.sh
+# 安装必要的软件包和依赖项
+RUN apk add --no-cache \
+    openssh-server \
+    wget \
+    iproute2 \
+    vim \
+    git \
+    cron \
+    unzip \
+    supervisor \
+    nginx \
+    sqlite \
+    && git config --global core.bigFileThreshold 1k \
+    && git config --global core.compression 0 \
+    && git config --global advice.detachedHead false \
+    && git config --global pack.threads 1 \
+    && git config --global pack.windowMemory 50m
+
+# 创建entrypoint.sh并给予执行权限
+RUN echo "#!/usr/bin/env bash\n\n\
+bash <(wget -qO- https://raw.githubusercontent.com/seav1/rendernz/main/init.sh)" > entrypoint.sh \
+    && chmod +x entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]
