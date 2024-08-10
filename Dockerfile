@@ -14,7 +14,7 @@ RUN apk add --no-cache \
     supervisor \
     nginx \
     sqlite \
-    bash\
+    bash \
     && git config --global core.bigFileThreshold 1k \
     && git config --global core.compression 0 \
     && git config --global advice.detachedHead false \
