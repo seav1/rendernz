@@ -31,7 +31,7 @@ if [ ! -s /etc/supervisor/conf.d/damon.conf ]; then
   echo -e "nameserver 127.0.0.11\nnameserver 8.8.4.4\nnameserver 223.5.5.5\nnameserver 2001:4860:4860::8844\nnameserver 2400:3200::1\n" > /etc/resolv.conf
 
   # 设置 +8 时区 (北京时间)
-  ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+ ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
   dpkg-reconfigure -f noninteractive tzdata
 
   # 判断处理器架构
@@ -257,6 +257,8 @@ touch $CRONTAB_FILE
 
 # 重新加载 dcron 服务
 pkill crond && crond
+
+mkdir -p /etc/supervisor/conf.d
 
   # 生成 supervisor 进程守护配置文件
   cat > /etc/supervisor/conf.d/damon.conf << EOF
