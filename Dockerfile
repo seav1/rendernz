@@ -9,7 +9,7 @@ RUN apk add --no-cache \
     iproute2 \
     vim \
     git \
-    cron \
+    dcron \
     unzip \
     supervisor \
     nginx \
