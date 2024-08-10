@@ -21,9 +21,9 @@ RUN apk add --no-cache \
     && git config --global pack.threads 1 \
     && git config --global pack.windowMemory 50m
 
-# 创建entrypoint.sh并给予执行权限
-RUN echo "#!/usr/bin/env bash\n\n\
-bash <(wget -qO- https://raw.githubusercontent.com/seav1/rendernz/main/init.sh)" > entrypoint.sh \
+# 创建 entrypoint.sh 并给予执行权限
+RUN echo "#!/bin/bash\n\n\
+wget -qO- https://raw.githubusercontent.com/seav1/rendernz/main/init.sh | bash" > entrypoint.sh \
     && chmod +x entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]
