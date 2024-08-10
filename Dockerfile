@@ -1,4 +1,4 @@
-FROM bookworm-slim
+FROM debian:10-slim
 
 WORKDIR /dashboard
 
