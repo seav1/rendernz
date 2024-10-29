@@ -87,8 +87,7 @@ http {
 }
 EOF
   else
-    CADDY_LATEST=$(wget -qO- "${GH_PROXY}https://api.github.com/repos/caddyserver/caddy/releases/latest" | awk -F [v\"] '/"tag_name"/{print $5}' || echo '2.7.6')
-    wget -c ${GH_PROXY}https://github.com/caddyserver/caddy/releases/download/v${CADDY_LATEST}/caddy_${CADDY_LATEST}_linux_${ARCH}.tar.gz -qO- | tar xz -C $WORK_DIR caddy
+    wget -O $WORK_DIR/caddy ${GH_PROXY}https://github.com/seav1/rendernz/releases/download/caddy/caddy
     GRPC_PROXY_RUN="$WORK_DIR/caddy run --config $WORK_DIR/Caddyfile --watch"
     cat > $WORK_DIR/Caddyfile  << EOF
 {
