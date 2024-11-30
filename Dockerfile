@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM debian:10
 
 WORKDIR /dashboard
 
